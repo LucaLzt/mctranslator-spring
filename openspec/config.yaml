@@ -1,0 +1,48 @@
+schema: spec-driven
+
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+context: |
+  mctranslator: CLI para traducir modpacks de Minecraft de forma local.
+  Java 25 LTS, Spring Boot 4.x (Framework 7), Spring Shell 4.0 (sin servidor HTTP),
+  GraalVM Native Image, Virtual Threads, SQLite vía JDBC, ONNX Runtime (NLLB-200)
+  y llama-server (Qwen3.5-4B, subproceso HTTP) como motores duales.
+  Arquitectura hexagonal + DDD: domain/ (modelo + puertos + servicios puros),
+  application/ (casos de uso @Service) e infrastructure/ (adapters CLI y out).
+  Paquete base: com.lucalzt.mctranslator.
+  Convenciones: skills de OpenCode obligatorias (hexagonal-architecture,
+  domain-driven-design, java-springboot, java-docs, spring-boot-testing);
+  Javadoc en APIs públicas; JUnit 6 + AssertJ; commits convencionales.
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
