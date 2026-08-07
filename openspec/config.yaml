@@ -13,36 +13,43 @@ context: |
   Paquete base: com.lucalzt.mctranslator.
   Convenciones: skills de OpenCode obligatorias (hexagonal-architecture,
   domain-driven-design, java-springboot, java-docs, spring-boot-testing);
-  Javadoc en APIs públicas; JUnit 6 + AssertJ; commits convencionales.
+  Javadoc en APIs públicas; JSpecify null-marked en dominio; JUnit 6 + AssertJ;
+  commits convencionales.
 
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+rules:
+  proposal:
+    - Incluir sección obligatoria de "Non-goals" (lo que explícitamente queda fuera de alcance).
+    - Definir criterios de aceptación medibles, verificables y orientados a comportamiento.
+    - Evaluar riesgos técnicos y operacionales (ej. consumo de memoria RAM con los modelos).
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  specs:
+    - Redactar requerimientos en formato delta estricto (ADDED / MODIFIED / REMOVED).
+    - Cada requerimiento DEBE incluir obligatoriamente al menos un bloque "#### Scenario:".
+    - Cero ambigüedad en contratos de puertos y definición de Value Objects inmutables.
+
+  design:
+    - Respetar estrictamente la arquitectura hexagonal (dominio 100% puro sin anotaciones de Spring ni JPA).
+    - Incluir consideraciones de resiliencia y manejo de errores (ej. fallbacks ante fallos del motor preciso).
+    - Especificar claramente la separación entre puertos de entrada (`port/in`) y salida (`port/out`).
+
+  tasks:
+    - Desglosar en tareas atómicas, estimadas en menos de 2 horas cada una.
+    - "Aplicar TDD estricto: las primeras tareas de cada capability deben escribir los tests (JUnit 6 / AssertJ) en rojo antes del código de producción."
+    - Especificar el comando exacto de verificación (ej. `./mvnw test`) en cada bloque de tareas.
 
 # Per-operation guidance (optional)
 # Add advisory guidance for how apply and archive work should be conducted.
 # This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+operations:
+  apply:
+    guidance:
+      - Seguir estrictamente el orden secuencial de tasks.md sin saltarse pasos.
+      - Ejecutar el test suite completo tras completar cada tarea para evitar regresiones.
+      - Documentar gotchas o aprendizajes técnicos descubiertos durante la implementación.
+
+  archive:
+    guidance:
+      - "Verificar trazabilidad completa: cada spec implementada debe estar cubierta por tests passing."
+      - Realizar un resumen claro del outcome antes de cerrar el ciclo de cambios.
