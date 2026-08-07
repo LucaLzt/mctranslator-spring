@@ -1,6 +1,12 @@
 # Engram (memoria local de la herramienta)
 .engram/
 
+# OpenSpec / OpenCode local
+node_modules/
+
+# Generado por Spring Initializr
+HELP.md
+
 # Maven / Java
 target/
 *.class
@@ -9,10 +15,33 @@ target/
 *.ear
 *.log
 dependency-reduced-pom.xml
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# IDE
+# STS (Spring Tool Suite)
+.apt_generated
+.factorypath
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA
 .idea/
+*.iws
 *.iml
+*.ipr
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# VS Code
 .vscode/
 .classpath
 .project
