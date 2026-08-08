@@ -43,7 +43,14 @@ class JsonPathTest {
 	void matchesLeadingSegmentsInOrder() {
 		assertThat(new JsonPath("quest.description.task1").startsWith("quest", "description")).isTrue();
 		assertThat(new JsonPath("item.sword").startsWith("item")).isTrue();
-		assertThat(new JsonPath("quest.advancement").startsWith("quest", "advancement")).isFalse();
+		assertThat(new JsonPath("quest.advancement").startsWith("quest", "advancement")).isTrue();
+	}
+
+	@Test
+	@DisplayName("Returns false when a leading segment differs")
+	void rejectsMismatchingSegments() {
+		assertThat(new JsonPath("quest.advancement").startsWith("quest", "description")).isFalse();
+		assertThat(new JsonPath("quest.advancement").startsWith("advancement")).isFalse();
 	}
 
 	@Test
