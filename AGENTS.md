@@ -16,9 +16,10 @@ Este proyecto adopta las siguientes skills de OpenCode. **Cárgalas y aplícalas
 
 ## Workflow SDD (OpenSpec)
 
-- Las especificaciones y propuestas de cambio viven en `openspec/` y se gestionan con el CLI `openspec`.
-- Instalación: `pnpm add -g @fission-ai/openspec@latest` (usar siempre pnpm).
-- Ciclo: `/opsx-propose` → revisión → `/opsx-apply` → `/opsx-archive`. Comandos en `.opencode/commands/`.
+- Las especificaciones y propuestas de cambio viven en `openspec/` del repo (o en el store elegido) y se gestionan con el flujo **global** `/sdd-*` (orquestador `sdd-orchestrator` de `~/.config/opencode/`).
+- Al iniciar cualquier comando SDD, el preflight pregunta dónde guardar los artefactos: **Disco** (global `~/.config/opencode/openspec/`), **Proyecto** (`openspec/` del repo, versionado en git) o **Ambos**. Engram siempre actúa como espejo.
+- Ciclo: `/sdd-new` (proposal → specs → design → tasks) → revisión → `/sdd-apply` → `/sdd-verify` → `/sdd-archive`.
+- El flujo experimental `/opsx-*` fue retirado del repo (2026-08); usar siempre `/sdd-*`.
 - No editar código durante la fase de proposición; solo planificar.
 
 ## Convenciones del código
