@@ -34,7 +34,7 @@ dependency-reduced-pom.xml
 # NetBeans
 /nbproject/private/
 /nbbuild/
-/dist/
+/dist/Implementa
 /nbdist/
 /.nb-gradle/
 build/
@@ -51,3 +51,6 @@ bin/
 # OS
 .DS_Store
 Thumbs.db
+
+# SQLite
+*.db
