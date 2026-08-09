@@ -10,31 +10,33 @@ import java.util.regex.Pattern;
  * Stateless domain service that protects printf and MessageFormat variables
  * with positional {@code __VAR_N__} tokens.
  *
- * <p>Masking replaces every occurrence of the pinned 3-branch alternation
- * {@code __VAR_(\d+)__ | %(?:\d+\$)?[sdf] | \{(\d+)(?:,[^}]*)?\}} — in this
- * order: literal token | printf | MessageFormat — with the next positional
- * token {@code __VAR_N__} in first-occurrence order (0-based). The returned
- * {@link MaskedText} records each matched original substring verbatim in its
+ * <p>Masking replaces every occurrence of the pinned escape-aware alternation
+ * {@code __VAR_(\d+)__ | %(?![0-9A-Fa-f]{2}(?!\$))(?:\d+\$)?(?:[sdfnxoegbchi]|ld)%% | %(?![0-9A-Fa-f]{2}(?!\$))(?:\d+\$)?(?:[sdfnxoegbchi]|ld) | %% | \{(\d+)(?:,[^}]*)?\}}
+ * — in this order: literal token | merge (conversion + escape) | conversion (v1 + F4) | standalone escape | MessageFormat
+ * — with the next positional token {@code __VAR_N__} in first-occurrence order (0-based).
+ * The returned {@link MaskedText} records each matched original substring verbatim in its
  * {@code variables} list, one entry per occurrence: no deduplication — two
  * occurrences of {@code %s} produce two entries.
  *
  * <p>The pinned pattern set masks: literal {@code __VAR_N__} tokens, which
- * are protected as regular variables (branch 1), so the masked output never
- * contains a token that does not correspond to a protected variable and no
- * leakage occurs; printf conversions {@code %s}, {@code %d} and {@code %f}
- * with an optional positional index ({@code %1$s}, {@code %2$d},
- * {@code %10$s}); and every indexed MessageFormat form {@code {N}},
- * {@code {N,type}} and {@code {N,type,style}}, including ChoiceFormat ranges
- * such as {@code {0,choice,0#zero|1#one}}. NOT masked (left literal,
- * round-trip identity): {@code %%}, case variants {@code %S}/{@code %D}/
- * {@code %F}, other printf conversions, width/precision forms such as
- * {@code %10.2f} and {@code %2$10d}, JSON braces, unbalanced braces, and
- * Minecraft section-sign formatting codes such as {@code §a}.
+ * are protected as regular variables (branch 1); printf conversions {@code %s},
+ * {@code %d}, {@code %f}, F4 extended conversions {@code %n}, {@code %x}, {@code %o},
+ * {@code %e}, {@code %g}, {@code %b}, {@code %c}, {@code %h}, {@code %i}, and the two-char
+ * conversion {@code %ld}, with optional positional index (e.g. {@code %1$s}, {@code %2$x});
+ * the standalone printf escape literal {@code %%}; merged conversion-escape tokens
+ * such as {@code %s%%}, {@code %1$s%%}, {@code %d%%}; and every indexed MessageFormat form
+ * {@code {N}}, {@code {N,type}}, {@code {N,type,style}}, including ChoiceFormat ranges
+ * such as {@code {0,choice,0#zero|1#one}}.
  *
- * <p><b>Documented limitation:</b> the alternation has no escape awareness. A
- * literal {@code %%} is never masked, but a {@code %s} immediately following
- * an escaped {@code %%} (e.g. {@code 100%%s}) IS masked — an accepted v1
- * limitation, not a bug.
+ * <p><b>URL guard:</b> URL percent-encoded sequences {@code %[0-9A-Fa-f]{2}}
+ * (such as {@code %20}, {@code %E2}, {@code %2C}, {@code %0A}) are never masked and are
+ * left literal, taking hard precedence over F4 detection (with refinement preventing
+ * false positives on positional indices like {@code %10$s}).
+ *
+ * <p>NOT masked (left literal, round-trip identity): case variants {@code %S}/{@code %D}/
+ * {@code %F}, F3 width/precision forms such as {@code %10.2f} and {@code %2$10d},
+ * the non-set two-character form {@code %l} (and {@code %ls}), JSON braces, unbalanced braces,
+ * named braces ({@code {p}}), and Minecraft section-sign formatting codes such as {@code §a}.
  *
  * <p><b>Re-entrancy note:</b> masking an already-masked string treats each
  * {@code __VAR_N__} as a literal token (first alternation branch) and
@@ -48,7 +50,11 @@ import java.util.regex.Pattern;
 public final class VariableMasker {
 
 	private static final Pattern VARIABLE_PATTERN = Pattern.compile(
-			"__VAR_(\\d+)__|%(?:\\d+\\$)?[sdf]|\\{(\\d+)(?:,[^}]*)?\\}");
+			"__VAR_(\\d+)__"                                               // (1) literal-token protection (v1, verbatim)
+			+ "|%(?![0-9A-Fa-f]{2}(?!\\$))(?:\\d+\\$)?(?:[sdfnxoegbchi]|ld)%%"   // (2a) MERGE: conversion + escape -> ONE token
+			+ "|%(?![0-9A-Fa-f]{2}(?!\\$))(?:\\d+\\$)?(?:[sdfnxoegbchi]|ld)"      // (2b) conversion: v1 + F4, optional positional index
+			+ "|%%"                                                        // (2c) standalone printf escape literal
+			+ "|\\{(\\d+)(?:,[^}]*)?\\}");                                 // (3) MessageFormat (v1, verbatim)
 
 	/**
 	 * Masks the given text, replacing every matched variable with the next

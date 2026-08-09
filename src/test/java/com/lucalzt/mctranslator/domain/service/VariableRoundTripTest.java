@@ -56,4 +56,31 @@ class VariableRoundTripTest {
 		assertThat(result.restoredText()).isEqualTo("A " + variables.get(10) + " B " + variables.get(1));
 		assertThat(result.unmatchedTokenIndices()).isEmpty();
 	}
+
+	@Test
+	@DisplayName("Standalone escape round-trips byte-identical")
+	void standaloneEscapeRoundTrip() {
+		String original = "100%% complete";
+		MaskedText masked = new VariableMasker().mask(original);
+		UnmaskResult result = new VariableUnmasker().unmask(masked, masked.maskedText());
+		assertThat(result.restoredText()).isEqualTo(original);
+	}
+
+	@Test
+	@DisplayName("Merged token round-trips byte-identical")
+	void mergedTokenRoundTrip() {
+		String original = "Progress: %s%%";
+		MaskedText masked = new VariableMasker().mask(original);
+		UnmaskResult result = new VariableUnmasker().unmask(masked, masked.maskedText());
+		assertThat(result.restoredText()).isEqualTo(original);
+	}
+
+	@Test
+	@DisplayName("F4 conversions round-trip byte-identical")
+	void f4ConversionsRoundTrip() {
+		String original = "Hex: %x, Long: %ld, Sci: %e";
+		MaskedText masked = new VariableMasker().mask(original);
+		UnmaskResult result = new VariableUnmasker().unmask(masked, masked.maskedText());
+		assertThat(result.restoredText()).isEqualTo(original);
+	}
 }
