@@ -1,0 +1,14 @@
+schema: 1.0
+domain: glossary
+change: json-glossary-adapter
+requirements:
+  - id: REQ-1
+    text: Glossary file location path pattern (glossary/{sourceLang}-{targetLang}.json) and graceful missing file fallback
+  - id: REQ-2
+    text: JSON structure parsing using Jackson with UTF-8 encoding support for term, translation, synonyms, and classification
+  - id: REQ-3
+    text: Automatic expansion of entry synonyms into independent lookup entries with identical translation and classification
+  - id: REQ-4
+    text: In-memory thread-safe caching per language pair to avoid redundant disk reads
+  - id: REQ-5
+    text: GlossaryPort interface implementation in the infrastructure layer respecting Hexagonal Architecture
