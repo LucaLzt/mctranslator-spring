@@ -1,0 +1,14 @@
+schema: 1.0
+domain: sqlite-cache
+change: sqlite-cache-adapter
+requirements:
+  - id: REQ-1
+    text: Configuration properties binding for mctranslator.cache.db-path
+  - id: REQ-2
+    text: SqliteTranslationCacheAdapter implements TranslationCachePort in infrastructure layer
+  - id: REQ-3
+    text: Automatic SQLite database and translation_cache table creation with composite unique key
+  - id: REQ-4
+    text: Cache lookup (find) and storage (save) respecting composite key (modpack_id, json_path, original_text, source_lang, target_lang)
+  - id: REQ-5
+    text: Transparent degradation logging warnings and continuing on SQLite errors
