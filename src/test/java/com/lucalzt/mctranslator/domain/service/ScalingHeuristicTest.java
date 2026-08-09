@@ -190,8 +190,13 @@ class ScalingHeuristicTest {
 	@Test
 	@DisplayName("Rule 6: default fall-through on a plain path with empty glossary — FAST/6")
 	void defaultFallThroughToRule6() {
+		// 10 words: rule 5 (<= 8) is blocked, rule 3 (> 30) is not reached,
+		// so rules 1-5 all fail and the default rule 6 decides. NOTE: the spec
+		// scenario example "A plain sentence" (3 words) cannot reach rule 6 —
+		// under the pinned empty-glossary literal reading, any <= 8-word text
+		// fires rule 5 first; a > 8-word text is required for fall-through.
 		ScalingDecision decision = HEURISTIC.suggest(
-				new JsonPath("some.other.key"), "A plain sentence", List.of());
+				new JsonPath("some.other.key"), words(10), List.of());
 
 		assertThat(decision.engine()).isEqualTo(TranslationEngineType.FAST);
 		assertThat(decision.matchedRule()).isEqualTo(6);
