@@ -9,7 +9,7 @@
  * framework dependencies, with JDK, jspecify and
  * {@code com.lucalzt.mctranslator.domain.model} imports only. The package is
  * {@link org.jspecify.annotations.NullMarked} — every type and member is
- * non-null by default, and there are no {@code @Nullable} elements.
+ * non-null by default, and no element is nullable.
  */
 @org.jspecify.annotations.NullMarked
 package com.lucalzt.mctranslator.domain.service;
