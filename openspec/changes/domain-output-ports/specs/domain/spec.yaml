@@ -1,0 +1,13 @@
+name: domain-output-ports-spec
+description: Specification for domain output ports (TranslationEnginePort, GlossaryPort, TranslationCachePort)
+requirements:
+  - id: REQ-1
+    text: TranslationEnginePort defines translate method
+  - id: REQ-2
+    text: GlossaryPort defines getTerms method
+  - id: REQ-3
+    text: TranslationCachePort defines find and save methods
+  - id: REQ-4
+    text: Ports reside in com.lucalzt.mctranslator.domain.port.out
+  - id: REQ-5
+    text: Zero framework dependencies in domain ports
