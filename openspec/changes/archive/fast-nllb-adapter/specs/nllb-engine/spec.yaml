@@ -1,0 +1,14 @@
+schema: 1.0
+domain: nllb-engine
+change: fast-nllb-adapter
+requirements:
+  - id: REQ-1
+    text: Maven dependencies for ONNX Runtime 1.26.0 and tokenizers, plus configuration properties for model assets path
+  - id: REQ-2
+    text: Loading of SentencePiece tokenizer and quantized ONNX encoder and decoder sessions with graceful error handling
+  - id: REQ-3
+    text: Robust ISO language code mapping to NLLB-200 language tags (e.g. spa_Latn, eng_Latn) with validation
+  - id: REQ-4
+    text: TranslationEnginePort implementation executing tokenization, encoder inference, autoregressive decoder generation, and detokenization for FAST engine type
+  - id: REQ-5
+    text: Proper lifecycle cleanup (@PreDestroy) of ONNX resources and clean Hexagonal Architecture placement in infrastructure.adapter.out.nllb
