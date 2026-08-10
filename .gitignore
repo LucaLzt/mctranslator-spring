@@ -54,3 +54,6 @@ Thumbs.db
 
 # SQLite
 *.db
+
+# Models
+models/
