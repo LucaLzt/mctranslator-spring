@@ -1,5 +1,7 @@
 package com.lucalzt.mctranslator.infrastructure.adapter.in;
 
+import com.lucalzt.mctranslator.infrastructure.adapter.out.nllb.FastNllbAdapter;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +10,15 @@ import org.springframework.shell.test.ShellScreen;
 import org.springframework.shell.test.ShellTestClient;
 import org.springframework.shell.test.autoconfigure.ShellTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ShellTest
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
 		properties = { "spring.shell.interactive.enabled=false" })
 class TranslateCommandTests {
+
+	@MockitoBean
+	private FastNllbAdapter fastNllbAdapter;
 
 	@Autowired
 	private ShellTestClient client;
